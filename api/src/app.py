@@ -50,7 +50,7 @@ def post_message(name: str = Form(), message: str = Form()) -> RedirectResponse:
 
 # TODO: add another API route with a query parameter to retrieve quotes based on max age
 @app.get("/quote/get")
-def get_message(time: str):
+def get_message(time: str) -> list[dict]:
     '''
     returns quotes in a specified time range, as noted by the
     time parameter
@@ -74,7 +74,9 @@ def get_message(time: str):
 
     for quote in quotes:
         if(time == "all" or datetime.strptime(quote["time"], "%Y-%m-%dT%H:%M:%S") >= time_now):
-            quote_times.append(quote)
-    # for quote in quote_times:
-    #     test.append(quote.strftime("%Y-%m-%dT%H:%M:%S"))
+            quote_times.append(quote.copy())
+
+    for quote in quote_times:
+        quote["time"] = datetime.strptime(quote["time"], "%Y-%m-%dT%H:%M:%S").strftime("%a - %b %d, %Y at %I:%M %p")
+        
     return quote_times
