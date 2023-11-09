@@ -17,6 +17,7 @@
     padding: 0;
     text-align: center;
     line-height: 160%;
+    overflow-wrap: break-word;
 }
 
 .quote-text::before {
@@ -35,6 +36,7 @@
     margin-top: 15px;
     font-size: 22px;
     text-align: center;
+    overflow-wrap: break-word;
 }
 
 .quote-author::before {
