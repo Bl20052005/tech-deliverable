@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timedelta
 from typing import TypedDict
 
 from fastapi import FastAPI, Form, status
@@ -48,3 +49,32 @@ def post_message(name: str = Form(), message: str = Form()) -> RedirectResponse:
 
 
 # TODO: add another API route with a query parameter to retrieve quotes based on max age
+@app.get("/quote/get")
+def get_message(time: str):
+    '''
+    returns quotes in a specified time range, as noted by the
+    time parameter
+    '''
+    quotes = database["quotes"]
+    quote_times = []
+    time_now = datetime.now()
+    
+    if(time == "past_hour"):
+        time_now = datetime.now() - timedelta(hours=1)
+    elif(time == "past_day"):
+        time_now = datetime.now() - timedelta(days=1)
+    elif(time == "past_week"):
+        time_now = datetime.now() - timedelta(days=7)
+    elif(time == "past_two_weeks"):
+        time_now = datetime.now() - timedelta(days=14)
+    elif(time == "past_month"):
+        time_now = datetime.now() - timedelta(days=30)
+    elif(time == "past_year"):
+        time_now = datetime.now() - timedelta(days=365)
+
+    for quote in quotes:
+        if(time == "all" or datetime.strptime(quote["time"], "%Y-%m-%dT%H:%M:%S") >= time_now):
+            quote_times.append(quote)
+    # for quote in quote_times:
+    #     test.append(quote.strftime("%Y-%m-%dT%H:%M:%S"))
+    return quote_times
